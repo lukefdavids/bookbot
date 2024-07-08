@@ -3,17 +3,26 @@ def main():
     text = get_book_text(book_path)
     word_count = count_words(text)
     character_count = count_characters(text)
-    create_dict_list(character_count)
-    print(f"Your document contains {word_count} total words.")
-    print(f"Here is how many times each letter of the alphabet was used in your document:")
-    print()
+    cleaned_character_count = create_dict_list(character_count)
+    character_list = sort(cleaned_character_count)
+    
+    print("------------------------------------------")
+    print(f"Begin report of {book_path}")
+    print("")
+    print(f"Total words: {word_count}")
+    print("")
+    for key, value in character_list:
+        print(f"The letter '{key}' appeared {value} times")
+    print("")
+    print("End report")
+    print("------------------------------------------")
 
 def get_book_text(path):
     with open(path) as f:
         return f.read()
 
 def count_words(frankenstein):
-    words = frankenstein.split() 
+    words = frankenstein.split()
     return len(words)  
 
 def count_characters(frankenstein):
@@ -27,21 +36,14 @@ def count_characters(frankenstein):
     return chars
 
 def create_dict_list(character_count):
-    list_of_dicts = []
-    
-    #remove non-alphabetical characters:
-    non_alpha_chars = []
-    for c in character_count:
-        if c.isalpha() == False:
-            non_alpha_chars.append(c)
-
+    non_alpha_chars = [c for c in character_count if not c.isalpha()]
     for c in non_alpha_chars:
         del character_count[c]
     
-    #convert the "chars" dictionary into a list of dictionaries:
-    for key, value in character_count.items():
-        list_of_dicts.append({key: value})
-    print(list_of_dicts)
+    return character_count
 
+def sort(character_count):
+    sorted_items = sorted(character_count.items(), key=lambda item: item[1], reverse=True)
+    return sorted_items
 
 main()
